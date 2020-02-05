@@ -488,7 +488,7 @@ public class OperatorContext {
             initTargetProperties(operator.getClass());
             setTargetImages();
             initGraphMetadata();
-            targetProduct.setProductWriterListener((ProgressMonitor pm) -> operator.execute(pm));
+            targetProduct.setProductWriterListener(operator::execute);
 
             targetProduct.setModified(false);
         } finally {

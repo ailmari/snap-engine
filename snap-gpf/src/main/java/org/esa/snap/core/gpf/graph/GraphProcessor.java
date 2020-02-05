@@ -213,20 +213,26 @@ public class GraphProcessor {
                                 // (1) Pull tile from first OperatorImage we find. This will trigger pulling
                                 // tiles of all other OperatorImage computed stack-wise.
                                 //
-                                for (Band band : targetProduct.getBands()) {
-                                    PlanarImage image = nodeContext.getTargetImage(band);
-                                    if (image != null) {
-                                        forceTileComputation(image, tileX, tileY, semaphore, tileScheduler, listeners,
-                                                             parallelism);
-                                        break;
-                                    }
+//                                for (Band band : targetProduct.getBands()) {
+//                                    PlanarImage image = nodeContext.getTargetImage(band);
+//                                    if (image != null) {
+//                                        forceTileComputation(image, tileX, tileY, semaphore, tileScheduler, listeners,
+//                                                             parallelism);
+//                                        break;
+//                                    }
+//                                }
+                                final Band firstBand = targetProduct.getBandAt(0);
+                                PlanarImage image = nodeContext.getTargetImage(firstBand);
+                                if (image != null) {
+                                    forceTileComputation(image, tileX, tileY, semaphore, tileScheduler, listeners,
+                                            parallelism);
                                 }
 
                                 // (2) Pull tile from source images of other regular bands.
                                 //
                                 for (Band band : targetProduct.getBands()) {
-                                    PlanarImage image = nodeContext.getTargetImage(band);
-                                    if (image == null) {
+                                    PlanarImage regularImage = nodeContext.getTargetImage(band);
+                                    if (regularImage == null) {
                                         if (OperatorContext.isRegularBand(band) && band.isSourceImageSet()) {
                                             forceTileComputation(band.getSourceImage(), tileX, tileY, semaphore,
                                                                  tileScheduler, listeners, parallelism);

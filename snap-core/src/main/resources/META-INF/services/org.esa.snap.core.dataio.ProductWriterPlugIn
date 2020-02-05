@@ -1,1 +1,2 @@
 org.esa.snap.core.dataio.dimap.DimapProductWriterPlugIn
+org.esa.snap.core.dataio.debug.DevNullProductWriterPlugin

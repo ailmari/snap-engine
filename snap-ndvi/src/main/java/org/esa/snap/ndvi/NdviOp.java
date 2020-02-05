@@ -167,7 +167,22 @@ public class NdviOp extends Operator {
                         continue;
                     }
 
-                    ndviValue = (nir - red) / (nir + red);
+                    // some fake calculations
+                    final double a_1 = Math.pow(nir, 2.81);
+                    final double a_2 = Math.pow(red, 0.678553);
+                    final double v = Math.atan2(a_1, a_2);
+                    final double v1 = v / (Math.exp(a_1) * Math.exp(a_2));
+                    double sum = 0.0;
+
+                    for (int i = 0; i < 100; i++) {
+                        sum += Math.atan2(red, nir - 1.0 / i);
+                        sum *= 1.0 - Math.exp(v1 - 1.0 / i);
+                    }
+
+                    // ----------------------
+                    ndviValue = (nir - red) / (nir + red) + (float) (v1 - sum);
+
+                    //ndviValue = (nir - red) / (nir + red);
                     ndviFlagsValue = 0;
                     if (Float.isNaN(ndviValue) || Float.isInfinite(ndviValue)) {
                         ndviFlagsValue |= NDVI_ARITHMETIC_FLAG_VALUE;
